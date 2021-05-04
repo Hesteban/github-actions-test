@@ -1,0 +1,15 @@
+# Pycharm
+.idea/
+.DS_Store
+
+# VSCode
+.vscode/
+
+# LOGS
+_output/
+
+# PYC
+*.pyc
+
+# VirtualENV
+venv/
