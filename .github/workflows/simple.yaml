@@ -17,3 +17,11 @@ jobs:
           import platform
           print(platform.processor())
         shell: python
+  run-shell-command2:
+    runs-on: mac-latetst
+    needs: ["run-shell-command"]
+    steps:
+      - name: bash in mac
+        run: |
+          jq
+        shell: bash
