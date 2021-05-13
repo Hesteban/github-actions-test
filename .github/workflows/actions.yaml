@@ -4,7 +4,6 @@ on:
   repository_dispatch:
     types: [build]
 
-  pull_request:
 
 jobs:
   runs-github-action:
