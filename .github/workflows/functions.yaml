@@ -12,3 +12,18 @@ jobs:
           echo ${{ startsWith('hello', 'he') }}
           echo ${{ endsWith('hello', 'o') }}
           echo ${{ format('hello {0} {1} {2}', 'world', '!', '!') }}
+
+      - name: Step fails
+        run: eccho "bad command"
+
+      - name: If step
+        if: failure()
+        run: echo "after error"
+
+      - name: Another step
+        run: echo "another step"
+
+      - name: Executed always
+        if: always()
+        run: echo "Always forever"
+
