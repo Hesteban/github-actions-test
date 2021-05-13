@@ -1,4 +1,4 @@
-name: Shell Commands
+name: Devel
 
 on: [push]
 
