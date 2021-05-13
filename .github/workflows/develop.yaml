@@ -7,6 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check environment
-          run: |
-            echo $GITHUB_SHA
-            echo $GITHUB_REF
+        run: |
+          echo $GITHUB_SHA
+          echo $GITHUB_REF
