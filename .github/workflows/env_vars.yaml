@@ -3,7 +3,7 @@ name: Environment vars
 on: [push]
 
 jobs:
-  create_issue:
+  create_automatic_issue:
     runs-on: ubuntu-latest
     permissions:
       issues: write
