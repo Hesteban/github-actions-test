@@ -1,12 +1,12 @@
 name: Testing functions
 
-on: [pull_request]
+on: [push]
 
 jobs:
   test_functions:
     runs-on: ubuntu-latest
     steps:
-      - name: Check result
+      - name: Check result functions
         run: |
           echo ${{ contains('hello', 'll') }}
           echo ${{ starsWitch('hello', 'he') }}
