@@ -9,6 +9,6 @@ jobs:
       - name: Check result functions
         run: |
           echo ${{ contains('hello', 'll') }}
-          echo ${{ starsWitch('hello', 'he') }}
-          echo ${{ endsWitch('hello', 'o') }}
+          echo ${{ starsWith('hello', 'he') }}
+          echo ${{ endsWith('hello', 'o') }}
           echo ${{ format('hello {0} {1} {2}', 'world', '!', '!') }}
