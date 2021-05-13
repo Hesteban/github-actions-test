@@ -1,0 +1,14 @@
+name: Testing functions
+
+on: [pull_request]
+
+jobs:
+  test_functions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check result
+        run: |
+          echo ${{ contains('hello', 'll') }}
+          echo ${{ starsWitch('hello', 'he') }}
+          echo ${{ endsWitch('hello', 'o') }}
+          echo ${{ format('hello {0} {1} {2}', 'world', '!', '!') }}
