@@ -1,0 +1,14 @@
+backports.zoneinfo==0.2.1; python_version < '3.9'
+cerberus==1.3.2
+cryptography>=3.3.2
+# botocore required by toolium requires docuutils<0.16, pip will install 0.16 by default
+docutils<0.16
+geopy==2.1.0
+jq==1.1.2
+jsonrpcclient==3.3.6
+needle==0.5.0
+networkx==2.5
+pillow==8.1.2
+pytz==2020.4
+retrying==1.3.3
+timeout-decorator==0.5.0

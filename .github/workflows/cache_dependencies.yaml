@@ -1,0 +1,25 @@
+name: Cache dependencies
+
+on: [push]
+
+
+jobs:
+  cache-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+          uses: actions/setup-python@v1
+          with:
+            python-version: 3.7.9
+
+      - name: echo a python version
+          run: python --version
+
+      - name: Requirements
+        run:
+          pip3 install --upgrade -r requirements.txt
+
+
