@@ -18,11 +18,12 @@ jobs:
       - name: echo a python version
         run: python --version
 
-      - name: Requirements
-        run: pip3 install --upgrade -r requirements.txt
-
       - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Requirements
+        run: pip3 install --upgrade -r requirements.txt
+
 
