@@ -11,15 +11,13 @@ jobs:
         run: |
           node -v
           npm -v
-  
   parallel-job:
     runs-on: macos-latest
     steps:
       - name: show sw version
         run: sw_vers
       - name: show xcode version
-        run: xcodebuild -version
-      
+        run: xcodebuild -version   
   dependant-job:
     runs-on: ubuntu-latest
     needs: [run-shell-commands]
