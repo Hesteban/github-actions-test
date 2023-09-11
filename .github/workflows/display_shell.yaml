@@ -1,6 +1,10 @@
 name: Display Shell
 on: push
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   display_shell:
     runs-on: ubuntu-latest
