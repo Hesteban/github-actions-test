@@ -2,6 +2,12 @@ name: Expressions
 on: [issues, pull_request]
 
 jobs: 
+  print_issue_context:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'issues' }}
+    steps:
+      - name: Print issue context
+        run: echo ${{ toJson(github.event.issue) }}
   get_labels_from_issue:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'issues' }}
