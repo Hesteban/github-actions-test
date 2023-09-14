@@ -9,4 +9,4 @@ jobs:
         steps:
             - name: Build
               run: |
-                  echo "Build"
+                  echo ${{ github.event.client_payload.integration }}
