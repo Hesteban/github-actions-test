@@ -7,7 +7,7 @@ jobs:
     if: ${{ github.event_name == 'issues' }}
     steps:
       - name: Print issue context
-        run: echo '${{ toJson(github) }}'
+        run: echo ${{ toJson(github) }}
   get_labels_from_issue:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'issues' }}
