@@ -1,0 +1,12 @@
+name: External Event
+on:
+    repository_dispatch:
+        types: [build]
+
+jobs:
+    repository_dispatch:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Build
+              run: |
+                  echo "Build"
