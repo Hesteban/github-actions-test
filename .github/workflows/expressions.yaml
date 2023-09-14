@@ -7,12 +7,12 @@ jobs:
     if: ${{ github.event_name == 'issues' }}
     steps:
       - name: Print issue context
-        run: echo ${{ toJson(github.event.issue) }}
+        run: echo '${{ toJson(github) }}'
   get_labels_from_issue:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'issues' }}
     steps:
       - name: Print all labels with contains if issue is a bug
         if: ${{ contains(github.event.issue.labels.*.name, 'bug') }}
-        run: echo ${{ toJson(github.event.issue.labels.*.name) }}
+        run: echo ${{ join(github.event.issue.labels.*.name, ', ') }}
         
