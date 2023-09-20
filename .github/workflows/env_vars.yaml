@@ -10,13 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     env:
       JOB_LEVEL_ENV: Job level env var
-    # Dont use ${{ github.ref }} here
+    # Dont use $GITHUB_REF here
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Log ENV VAR # Evaluated within the runner machine
         run: echo $GITHUB_REF
       - name: Log Context # Evaluated in GitHub before sending to the runner machine
         run: echo '${{ github.ref }}'
+      - name: Set env var
+        run: echo "MY_ENV_VAR=Hello World" >> $GITHUB_ENV
       - name: Log Custom ENV Vars
         env:
           STEP_LEVEL_ENV: Step level env var
@@ -25,5 +27,6 @@ jobs:
           echo $STEP_LEVEL_ENV
           echo $WF_LEVEL_ENV
           echo $JOB_LEVEL_ENV
+          echo $MY_ENV_VAR
 
 
