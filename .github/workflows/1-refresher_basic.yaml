@@ -1,0 +1,25 @@
+name: PoC Nivel 1 - Explorando el Runner
+
+# Triggers: se activa al hacer push a la rama principal O manualmente
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  exploracion:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 1. Obtener el código
+        uses: actions/checkout@v4
+
+      - name: 2. Mostrar info del contexto
+        run: |
+          echo "Hola! El workflow fue activado por: ${{ github.actor }}"
+          echo "Estamos en la rama: ${{ github.ref }}"
+          echo "El evento que disparó esto es: ${{ github.event_name }}"
+
+      - name: 3. Listar archivos para verificar el checkout
+        run: ls -R
