@@ -1,0 +1,50 @@
+name: Level 2.5 - Dynamic Job Outputs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_job:
+    name: Build and Package
+    runs-on: ubuntu-latest
+    # Define which outputs this job makes available to others
+    outputs:
+      filename: ${{ steps.set_name.outputs.DYNAMIC_NAME }}
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Generate Dynamic Name
+        id: set_name # We need an ID to reference this step later
+        run: |
+          # Create a name like "build-20231027.txt"
+          FNAME="build-$(date +'%Y%m%d%H%M').txt"
+          echo "DYNAMIC_NAME=$FNAME" >> $GITHUB_OUTPUT
+          echo "Generated name: $FNAME"
+
+      - name: Create File
+        run: echo "Hello world" > ${{ steps.set_name.outputs.DYNAMIC_NAME }} 
+        # every step runs in a new shell, so no previous vars are present unless other solutions are used
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.set_name.outputs.DYNAMIC_NAME }}
+          path: ${{ steps.set_name.outputs.DYNAMIC_NAME }}
+
+  deploy_job:
+    name: Deploy to Environment
+    runs-on: ubuntu-latest
+    needs: build_job
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          # We access the output from the previous job via the 'needs' context
+          name: ${{ needs.build_job.outputs.filename }}
+
+      - name: Verify Dynamic File
+        run: |
+          echo "The file passed from the previous job is: ${{ needs.build_job.outputs.filename }}"
+          ls -R
