@@ -3,7 +3,7 @@ name: PoC Nivel 1 - Explorando el Runner
 # Triggers: se activa al hacer push a la rama principal O manualmente
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   workflow_dispatch:
   pull_request:
 
