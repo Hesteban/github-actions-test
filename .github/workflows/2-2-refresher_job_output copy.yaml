@@ -1,4 +1,4 @@
-name: Level 2.5 - Dynamic Job Outputs
+name: Level 2.2 - Dynamic Job Outputs
 
 on:
   workflow_dispatch:

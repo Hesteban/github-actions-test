@@ -1,0 +1,31 @@
+name: Level 2-3 - Job-Level Environment Variables
+
+on:
+  workflow_dispatch:
+
+jobs:
+  job_level_env:
+    name: Job-Level Environment Variables
+    runs-on: ubuntu-latest
+    env: # Defined here, accessible in EVERY step of this job
+      FILE_NAME: build-assets.zip
+    
+    steps:
+      - name: Create
+        run: touch $FILE_NAME
+      - name: List
+        run: ls $FILE_NAME
+  
+  git_env:
+    name: Git env variable
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate Name
+        run: echo "DYNAMIC_FNAME=build-$(date +'%Y%m%d').txt" >> $GITHUB_ENV
+
+      - name: Use Name Simply
+        # Now I don't need ${{ steps... }}, I can just use standard bash
+        run: |
+          echo "Creating $DYNAMIC_FNAME"
+          touch $DYNAMIC_FNAME
