@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     # Define which outputs this job makes available to others
     outputs:
-      filename: ${{ steps.set_name.outputs.DYNAMIC_NAME }}
+      filename: ${{ steps.set_name.outputs.DYNAMIC_NAME }} # steps.<step_id>.outputs.<output_name>
     
     steps:
       - name: Checkout Repository

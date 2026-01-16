@@ -1,0 +1,72 @@
+name: Level 3.2 - Caching Dependencies (Python Example)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master ]
+
+jobs:
+  test-with-cache:
+    runs-on: ubuntu-latest
+    name: Test Python Project with Caching
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          # Path to cache (where pip installs packages)
+          path: ~/.cache/pip
+          # Key to identify the cache
+          # It changes when requirements.txt changes, creating a new cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          # Fallback keys if exact match not found
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          echo "✅ Dependencies installed (from cache or fresh)"
+
+      - name: Run Tests
+        run: |
+          echo "Running tests..."
+          python -c "import requests; print(f'requests version: {requests.__version__}')"
+
+      - name: Verify Cache Hit
+        run: |
+          echo "First run: dependencies were downloaded/loaded"
+          echo "Second run: dependencies will be loaded from cache if requirements.txt hasn't changed"
+
+  # This job demonstrates cache with no dependencies found
+  test-without-cache:
+    runs-on: ubuntu-latest
+    name: Test Python Project Without Caching (for comparison)
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies (No Cache)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          echo "⚠️  Without caching, dependencies are always downloaded fresh"
+
+      - name: Run Tests
+        run: |
+          echo "This job installs dependencies every time, even if unchanged"

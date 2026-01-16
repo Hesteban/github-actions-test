@@ -1,0 +1,35 @@
+name: Level 3-1 - Matrix Strategy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-suite:
+    strategy:
+      # If one version fails, don't cancel the others automatically
+      fail-fast: false 
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [18, 20, 22]
+        # You can even include custom flags
+        include:
+          - os: ubuntu-latest
+            node-version: 23
+            experimental: true
+        # This will execute 7 jobs in total
+
+    runs-on: ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} (Node ${{ matrix.node-version }})
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Environment Check
+        run: |
+          node -v
+          npm -v
