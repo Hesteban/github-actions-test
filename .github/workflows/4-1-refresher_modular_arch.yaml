@@ -21,13 +21,3 @@ jobs:
       - name: Show Output from Action
         run: | 
             echo "The Action returned this ID: ${{ steps.my_action.outputs.random_id }}"
-
-#   deploy-with-gate:
-#     name: Production Deployment
-#     needs: call-custom-action
-#     runs-on: ubuntu-latest
-#     # 5. This job will PAUSE if you have 'production' environment configured
-#     environment: production 
-#     steps:
-#       - name: Final Deploy
-#         run: echo "Deploying to production after manual approval..."

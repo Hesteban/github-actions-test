@@ -1,0 +1,14 @@
+name: Level 4-2 - Environments
+
+on:
+  workflow_dispatch:
+
+jobs:
+    deploy-with-gate:
+      name: Production Deployment
+      runs-on: ubuntu-latest
+      # 5. This job will PAUSE if you have 'production' environment configured
+      environment: production 
+      steps:
+        - name: Final Deploy
+          run: echo "Deploying to production after manual approval..."
