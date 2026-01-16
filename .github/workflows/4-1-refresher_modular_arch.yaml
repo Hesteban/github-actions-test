@@ -1,0 +1,33 @@
+name: Level 4 - Modular Architect
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-custom-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 3. Call your local action using the folder path
+      - name: Use my Composite Action
+        id: my_action
+        uses: ./.github/actions/refresher-actions
+        with:
+          user_name: 'Master of Actions'
+
+      # 4. Use the output generated INSIDE the composite action
+      - name: Show Output from Action
+        run: | 
+            echo "The Action returned this ID: ${{ steps.my_action.outputs.random_id }}"
+
+#   deploy-with-gate:
+#     name: Production Deployment
+#     needs: call-custom-action
+#     runs-on: ubuntu-latest
+#     # 5. This job will PAUSE if you have 'production' environment configured
+#     environment: production 
+#     steps:
+#       - name: Final Deploy
+#         run: echo "Deploying to production after manual approval..."

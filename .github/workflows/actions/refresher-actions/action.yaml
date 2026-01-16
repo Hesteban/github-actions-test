@@ -1,0 +1,36 @@
+name: 'Custom Setup & Greet'
+description: Refresher on creating a composite action that greets a user and performs setup tasks.
+
+# 1. Define inputs (parameters)
+inputs:
+  user_name:
+    description: 'Who to greet'
+    required: true
+    default: 'Developer'
+
+# 2. Define outputs (if the action calculates something)
+outputs:
+  random_id:
+    description: "A generated ID from the action"
+    value: ${{ steps.generate_id.outputs.ID }}
+
+runs:
+  using: "composite" # This tells GitHub it's a collection of steps
+  steps:
+    - name: Greet User
+      run: echo "Hello ${{ inputs.user_name }}! This is a Composite Action."
+      shell: bash # MANDATORY in composite actions
+
+    - name: Generate ID
+      id: generate_id
+      run: |
+        ID_VAL="ID-${{ github.run_number }}-$RANDOM"
+        echo "ID=$ID_VAL" >> $GITHUB_OUTPUT
+        echo "Generated $ID_VAL"
+      shell: bash
+
+    - name: System Check
+      run: |
+        echo "Running on: ${{ runner.os }}"
+        uptime
+      shell: bash
