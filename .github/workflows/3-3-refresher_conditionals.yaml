@@ -1,0 +1,29 @@
+name: Level 3.3 - Conditionals
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-conditional:
+    strategy:
+      # If one version fails, don't cancel the others automatically
+      fail-fast: false 
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    
+    runs-on: ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} with conditionals
+
+    steps:
+      - name: Mac Only Tool
+        if: runner.os == 'macOS'
+        run: |
+          echo "This only runs on Apple runners"
+          jq
+      - name: Ubuntu Only Tool
+        if: runner.os == 'Linux'
+        run: |
+          echo "This only runs on Ubuntu runners"
+          import platform
+          print(platform.processor())
+
