@@ -263,3 +263,107 @@ The cache automatically updates when:
 - The `key` changes (e.g., `requirements.txt` is modified)
 - The cache expires (default 7 days of inactivity)
 - You manually delete it from Settings > Actions > Caches
+
+## 3. Conditionals: Running Steps/Jobs Only When Conditions Are Met
+
+**Problem:** You want to skip or run specific steps/jobs based on conditions (OS, branch, event type, etc).
+
+**Solution:** Use the `if:` keyword with conditional expressions.
+
+### Common Conditional Contexts
+
+| Context | Example | Use Case |
+|---------|---------|----------|
+| `runner.os` | `if: runner.os == 'Linux'` | Run only on specific OS |
+| `github.ref` | `if: github.ref == 'refs/heads/main'` | Run only on specific branch |
+| `github.event_name` | `if: github.event_name == 'push'` | Run only for specific events |
+| `success()` | `if: success()` | Run if previous steps succeeded |
+| `failure()` | `if: failure()` | Run if previous steps failed |
+| `always()` | `if: always()` | Run regardless of previous status |
+
+### Step-Level Conditionals
+
+Run a step only on a specific OS:
+
+```yaml
+steps:
+  - name: Mac Only Tool
+    if: runner.os == 'macOS'
+    run: echo "This only runs on Apple runners"
+
+  - name: Ubuntu Only Tool
+    if: runner.os == 'Linux'
+    run: echo "This only runs on Ubuntu runners"
+
+  - name: Windows Only
+    if: runner.os == 'Windows'
+    run: echo "This only runs on Windows runners"
+```
+
+### Job-Level Conditionals
+
+Skip an entire job based on a condition:
+
+```yaml
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'  # Only deploy from main branch
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to production"
+```
+
+### Complex Conditionals
+
+Combine multiple conditions with `&&` (AND) and `||` (OR):
+
+```yaml
+- name: Run tests on main branch
+  if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  run: npm test
+
+- name: Notify on failure
+  if: failure() || github.event_name == 'workflow_dispatch'
+  run: echo "Something went wrong or manual trigger"
+```
+
+### Job Status Functions
+
+**Success/Failure Workflow:**
+
+```yaml
+steps:
+  - name: Run Tests
+    run: npm test
+
+  - name: Cleanup on Success
+    if: success()
+    run: echo "Tests passed!"
+
+  - name: Send Alert on Failure
+    if: failure()
+    run: echo "Tests failed! Sending alert..."
+
+  - name: Generate Report
+    if: always()  # Always runs, regardless of previous outcomes
+    run: echo "Generating final report..."
+```
+
+### Conditional Environment Variables
+
+Skip based on secrets or variables:
+
+```yaml
+- name: Deploy if credentials exist
+  if: env.DEPLOY_KEY != ''
+  env:
+    DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+  run: ./deploy.sh
+```
+
+### Best Practices
+- ✅ Use `if: always()` for cleanup or notification steps
+- ✅ Use `if: failure()` for error handling
+- ✅ Use `if: success()` for dependent steps
+- ✅ Keep conditionals simple; use jobs for complex logic
+- ✅ Test conditionals carefully in pull requests first

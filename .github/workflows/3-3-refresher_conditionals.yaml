@@ -2,6 +2,9 @@ name: Level 3.3 - Conditionals
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ master, main ]
+  pull_request:
 
 jobs:
   run-conditional:
@@ -15,15 +18,99 @@ jobs:
     name: Test on ${{ matrix.os }} with conditionals
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
       - name: Mac Only Tool
         if: runner.os == 'macOS'
         run: |
-          echo "This only runs on Apple runners"
-          jq
+          echo 'This only runs on Apple runners'
+          sw_vers
+
       - name: Ubuntu Only Tool
         if: runner.os == 'Linux'
         run: |
-          echo "This only runs on Ubuntu runners"
-          import platform
-          print(platform.processor())
+          echo 'This only runs on Ubuntu runners'
+          uname -a
+
+      - name: Run Tests (All OS)
+        run: |
+          echo 'Running tests on ${{ matrix.os }}'
+          python -c 'print("Tests passed")'
+
+      - name: Success Message
+        if: success()
+        run: echo 'All steps completed successfully'
+
+      - name: Failure Alert
+        if: failure()
+        run: echo 'A step failed. Check logs above.'
+
+      - name: Always Run (Cleanup)
+        if: always()
+        run: echo 'This runs regardless of success or failure'
+
+  branch-conditional:
+    runs-on: ubuntu-latest
+    name: Branch-specific Job
+    # Only run this job on main branch
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Info
+        run: |
+          echo 'This job only runs on main/master branch: ${{ github.ref }}'
+
+  event-conditional:
+    runs-on: ubuntu-latest
+    name: Event-based Conditionals
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Push Event
+        if: github.event_name == 'push'
+        run: echo 'This triggered via push event'
+
+      - name: Pull Request Event
+        if: github.event_name == 'pull_request'
+        run: echo 'This triggered via pull request event'
+
+      - name: Manual Trigger (workflow_dispatch)
+        if: github.event_name == 'workflow_dispatch'
+        run: echo 'This was manually triggered'
+
+      - name: Show Event Name
+        run: |
+          echo 'Current event: ${{ github.event_name }}'
+
+  complex-conditional:
+    runs-on: ubuntu-latest
+    name: Complex Conditional Logic
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Test Setup
+        id: test_setup
+        run: |
+          echo "setup_complete=true" >> $GITHUB_OUTPUT
+          echo "test_version=1.0.0" >> $GITHUB_OUTPUT
+
+      - name: Run on main AND push event
+        if: (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master') && github.event_name == 'push'
+        run: echo 'Running on main branch via push - could deploy here'
+
+      - name: Run unless on main branch
+        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master'
+        run: echo 'Running on feature branch - testing mode'
+
+      - name: Conditional with Setup Output
+        if: steps.test_setup.outputs.setup_complete == 'true'
+        run: echo 'Setup was successful, proceeding with tests (v${{ steps.test_setup.outputs.test_version }})'
 
